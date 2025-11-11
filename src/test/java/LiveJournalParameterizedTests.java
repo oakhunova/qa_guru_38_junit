@@ -4,7 +4,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.*;
@@ -48,18 +51,19 @@ public class LiveJournalParameterizedTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "программирование", "скейтборд", "музыка"
-    })
+    @MethodSource(value = "searchQueriesProvider")
     void searchForDifferentTopics(String searchQuery) {
-        $(".s-header-search__btn").click();
-        $(".s-header-search__input").shouldBe(visible)
-                .setValue(searchQuery)
-                .pressEnter();
-        sleep(3000);
-        switchTo().window(1);
-        sleep(3000);
-        $$(".rsearch-note").shouldHave(sizeGreaterThan(0));
+    $(".s-header-search__btn").click();
+    $(".s-header-search__input").shouldBe(visible)
+            .setValue(searchQuery)
+            .pressEnter();
+    sleep(3000);
+    switchTo().window(1);
+    sleep(3000);
+    $$(".rsearch-note").shouldHave(sizeGreaterThan(0));
+}
 
+    static Stream<String> searchQueriesProvider() {
+        return Stream.of("программирование", "скейтборд", "музыка");
     }
 }

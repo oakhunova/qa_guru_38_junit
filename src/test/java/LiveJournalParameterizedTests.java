@@ -2,6 +2,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +15,11 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class LiveJournalParameterizedTests {
+
+    @BeforeAll
+    static void pageLoad() {
+        Configuration.pageLoadStrategy = "eager";
+    }
 
     @BeforeEach
     void setUp() {
@@ -57,9 +63,7 @@ public class LiveJournalParameterizedTests {
     $(".s-header-search__input").shouldBe(visible)
             .setValue(searchQuery)
             .pressEnter();
-    sleep(3000);
     switchTo().window(1);
-    sleep(3000);
     $$(".rsearch-note").shouldHave(sizeGreaterThan(0));
 }
 
